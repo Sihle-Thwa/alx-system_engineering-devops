@@ -5,7 +5,7 @@ if ARGV.length != 1
   exit 1
 end
 
-search_pattern = /h[a-z]{2,5}n/
+search_pattern = /hbt{2,5}n/
 matches = ARGV[0].scan(search_pattern)
 
 if matches.empty?
