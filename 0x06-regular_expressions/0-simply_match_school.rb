@@ -5,8 +5,8 @@ if ARGV.length != 1
   exit 1
 end
 
-search_term = "School"
-occurrences = ARGV[0].scan(search_term)
+search_term = "\bSchool\b"
+occurrences = ARGV[0].scan(Regexp.new(search_term, Regexp::EXTENDED))
 
 if occurrences.empty?
   puts "No occurrences of '#{search_term}' found in the given input."
