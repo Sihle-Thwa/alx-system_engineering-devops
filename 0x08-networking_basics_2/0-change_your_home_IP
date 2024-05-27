@@ -1,9 +1,25 @@
-#!/usr/bin/env bash
-# Configures an Ubuntu server as follows:
-#   - localhost resolves to 127.0.0.2
-#   - facebook.com resolves to 8.8.8.8
+#!/bin/bash
 
-cp /etc/hosts ~/hosts.new
-echo "127.0.0.2		localhost" > ~/hosts.new
-echo "8.8.8.8		facebook.com" >> ~/hosts.new
-cp -f ~/hosts.new /etc/hosts
+# Update package lists and install necessary packages
+sudo apt-get update
+sudo apt-get install -y dnsmasq
+
+# Stop the DNS service
+sudo systemctl stop systemd-resolved
+
+# Disable the DNS service
+sudo systemctl disable systemd-resolved
+
+# Configure dnsmasq
+cat << EOF | sudo tee /etc/dnsmasq.d/custom.conf
+address=/localhost/127.0.0.2
+address=/facebook.com/8.8.8.8
+EOF
+
+# Restart dnsmasq
+sudo systemctl restart dnsmasq
+
+# Verify the configuration
+sudo systemd-resolve --status | grep 'DNS Servers'
+sudo nslookup localhost
+sudo nslookup facebook.com
